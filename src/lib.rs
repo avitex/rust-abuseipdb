@@ -323,7 +323,7 @@ struct CheckBlockRequest<'a> {
 }
 
 impl<'a> Request for CheckBlockRequest<'a> {
-    type Response = Check;
+    type Response = BlockCheck;
 
     fn into_builder(self, client: &Client) -> RequestBuilder {
         client.inner.get(client.endpoint("check-block", self))
@@ -380,7 +380,7 @@ impl Client {
         &self,
         network: &str,
         max_age_in_days: Option<u16>,
-    ) -> Result<Response<Check>, Error> {
+    ) -> Result<Response<BlockCheck>, Error> {
         self.request(CheckBlockRequest {
             network,
             max_age_in_days,
