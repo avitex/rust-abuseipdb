@@ -4,7 +4,7 @@
 
 # rust-abuseipdb
 
-**AbuseIPDB API Rust Client**  
+**Rust client for the AbuseIPDB API**  
 Documentation hosted on [docs.rs](https://docs.rs/abuseipdb).
 
 ```toml

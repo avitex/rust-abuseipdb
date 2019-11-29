@@ -416,7 +416,6 @@ impl Client {
             .await?;
         // Extract the rate limit information from the response headers.
         let res_status = res.status();
-        dbg!(&res);
         let rate_limit = RateLimit::from_headers(res.headers())?;
         let retry_after_opt = parse_i64_header(res.headers(), header::RETRY_AFTER.as_str())?;
         // Deserialize the JSON document body.
