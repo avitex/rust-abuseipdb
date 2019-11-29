@@ -1,0 +1,22 @@
+[package]
+name = "abuseipdb"
+version = "0.1.0"
+authors = ["avitex <theavitex@gmail.com>"]
+edition = "2018"
+description = "AbuseIPDB client"
+documentation = "https://docs.rs/abuseipdb"
+homepage = "https://github.com/avitex/rust-abuseipdb"
+repository = "https://github.com/avitex/rust-abuseipdb"
+categories = ["async"]
+license = "MIT"
+
+[dependencies]
+
+jsonapi = "0.6"
+chrono = { version = "0.4", features = ["serde"] }
+reqwest = { version = "0.10.0-alpha.2", features = ["json"] }
+
+serde = { version = "~1", features = ["derive"] }
+serde_repr = "0.1"
+serde_json = "~1"
+serde_urlencoded = "0.6"
