@@ -7,7 +7,7 @@ description = "AbuseIPDB client"
 documentation = "https://docs.rs/abuseipdb"
 homepage = "https://github.com/avitex/rust-abuseipdb"
 repository = "https://github.com/avitex/rust-abuseipdb"
-categories = ["async"]
+categories = ["api-bindings"]
 license = "MIT"
 
 [dependencies]
