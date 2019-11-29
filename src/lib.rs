@@ -1,3 +1,17 @@
+//! AbuseIPDB API Client.
+//! 
+//! ```rust
+//! use abuseipdb::Client;
+//! use std::net::Ipv4Addr;
+//! 
+//! async fn example() {
+//!     let my_ip = Ipv4Addr::new(127, 0, 0, 1).into();
+//!     let client = Client::new("<API-KEY>");
+//!     let response = client.check(my_ip, None, false).await.unwrap();
+//!     println!("abuseConfidenceScore: {}", response.data.abuse_confidence_score);
+//! }
+//! ```
+
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::net::IpAddr;
@@ -20,6 +34,7 @@ pub const DEFAULT_USER_AGENT: &str = concat!("rust-abuseipdb-client/", env!("CAR
 ///////////////////////////////////////////////////////////////////////////////
 // Common
 
+/// Represents a failure while making a request to AbuseIPDB.
 #[derive(Debug)]
 pub enum Error {
     InvalidBody,
@@ -34,6 +49,7 @@ impl From<reqwest::Error> for Error {
     }
 }
 
+/// Represents an error returned by AbuseIPDB via the API.
 #[derive(Debug)]
 pub struct ApiError {
     pub rate_limit: RateLimit,
@@ -112,6 +128,8 @@ trait Request {
     fn into_builder(self, client: &Client) -> RequestBuilder;
 }
 
+/// Wrapper type for successful API responses with rate limit
+/// and meta information.
 #[derive(Debug)]
 pub struct Response<T> {
     pub data: T,
@@ -119,6 +137,7 @@ pub struct Response<T> {
     pub rate_limit: RateLimit,
 }
 
+/// The rate limit information returned from a request to AbuseIPDB.
 #[derive(Debug)]
 pub struct RateLimit {
     /// Your daily limit.
@@ -314,6 +333,7 @@ impl<'a> Request for CheckBlockRequest<'a> {
 ///////////////////////////////////////////////////////////////////////////////
 // Client
 
+/// The AbuseIPDB client.
 pub struct Client {
     base_url: Url,
     inner: reqwest::Client,
@@ -322,14 +342,22 @@ pub struct Client {
 }
 
 impl Client {
+    /// Create a new AbuseIPDB client with the given API key and 
+    /// default settings.
     pub fn new<S: Into<String>>(api_key: S) -> Self {
         Self::builder().api_key(api_key.into()).build()
     }
 
+    /// Returns a AbuseIPDB client builder.
     pub fn builder() -> ClientBuilder {
         ClientBuilder::new()
     }
 
+    /// Queries AbuseIPDB given a IP address.
+    ///
+    /// The check endpoint accepts a single IP address (v4 or v6). 
+    /// Optionally you may set the `max_age_in_days` parameter to only 
+    /// return reports within the last x amount of days.
     pub async fn check(
         &self,
         ip_addr: IpAddr,
@@ -344,6 +372,10 @@ impl Client {
         .await
     }
 
+    /// Queries AbuseIPDB given a subnet.
+    ///
+    /// The check-block endpoint accepts a subnet (v4 or v6) 
+    /// denoted with CIDR notation.
     pub async fn check_block(
         &self,
         network: &str,
@@ -356,6 +388,10 @@ impl Client {
         .await
     }
 
+    /// Queries AbuseIPDB for the blacklist.
+    ///
+    /// The blacklist is the culmination of all of the valiant reporting 
+    /// by AbuseIPDB users. It's a list of the most reported IP addresses.
     pub async fn blacklist(
         &self,
         confidence_min: Option<u8>,
@@ -370,6 +406,9 @@ impl Client {
         .await
     }
 
+    /// Reports an IP address to AbuseIPDB.
+    ///
+    /// At least one category is required.
     pub async fn report(
         &self,
         ip_addr: IpAddr,
@@ -460,6 +499,7 @@ impl Client {
 ///////////////////////////////////////////////////////////////////////////////
 // Client Builder
 
+/// A builder to create a configured AbuseIPDB client.
 #[derive(Debug, Clone)]
 pub struct ClientBuilder {
     inner: reqwest::Client,
@@ -469,10 +509,12 @@ pub struct ClientBuilder {
 }
 
 impl ClientBuilder {
+    /// Create the client builder with the default HTTP client.
     pub fn new() -> Self {
-        Self::with_client(reqwest::Client::new())
+        Self::default()
     }
 
+    /// Creates the client builder, given a pre-existing HTTP client.
     pub fn with_client(client: reqwest::Client) -> Self {
         Self {
             api_key: None,
@@ -482,11 +524,14 @@ impl ClientBuilder {
         }
     }
 
+    /// Sets the base URL for the AbuseIPDB API.
     pub fn base_url<S>(mut self, base_url: Url) -> Self {
         self.base_url = base_url.into();
         self
     }
 
+    /// Set the user agent the client will use when making a
+    /// request to AbuseIPDB.
     pub fn user_agent<S>(mut self, user_agent: S) -> Self
     where
         S: Into<Cow<'static, str>>,
@@ -495,6 +540,8 @@ impl ClientBuilder {
         self
     }
 
+    /// Sets the API key to be used to authenticate when 
+    /// making a request AbuseIPDB.
     pub fn api_key<S>(mut self, api_key: S) -> Self
     where
         S: Into<Cow<'static, str>>,
@@ -503,6 +550,8 @@ impl ClientBuilder {
         self
     }
 
+    /// Consumes the client builder and returns the built
+    /// AbuseIPDB client.
     pub fn build(self) -> Client {
         Client {
             inner: self.inner,
@@ -510,6 +559,12 @@ impl ClientBuilder {
             base_url: self.base_url,
             user_agent: self.user_agent,
         }
+    }
+}
+
+impl Default for ClientBuilder {
+    fn default() -> Self {
+        Self::with_client(reqwest::Client::new())
     }
 }
 
