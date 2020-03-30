@@ -8,7 +8,7 @@
 Documentation hosted on [docs.rs](https://docs.rs/abuseipdb).
 
 ```toml
-abuseipdb = "0.2.0"
+abuseipdb = "0.2.1"
 ```
 
 ## Example usage
