@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/avitex/rust-abuseipdb.svg?branch=master)](https://travis-ci.org/avitex/rust-abuseipdb)
+[![Build Status](https://travis-ci.com/avitex/rust-abuseipdb.svg?branch=master)](https://travis-ci.com/avitex/rust-abuseipdb)
 [![Crate](https://img.shields.io/crates/v/abuseipdb.svg)](https://crates.io/crates/abuseipdb)
 [![Docs](https://docs.rs/abuseipdb/badge.svg)](https://docs.rs/abuseipdb)
 
