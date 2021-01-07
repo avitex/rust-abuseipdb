@@ -1,9 +1,9 @@
 //! AbuseIPDB API Client.
-//! 
+//!
 //! ```rust
 //! use abuseipdb::Client;
 //! use std::net::Ipv4Addr;
-//! 
+//!
 //! async fn example() {
 //!     let my_ip = Ipv4Addr::new(127, 0, 0, 1).into();
 //!     let client = Client::new("<API-KEY>");
@@ -342,7 +342,7 @@ pub struct Client {
 }
 
 impl Client {
-    /// Create a new AbuseIPDB client with the given API key and 
+    /// Create a new AbuseIPDB client with the given API key and
     /// default settings.
     pub fn new<S: Into<String>>(api_key: S) -> Self {
         Self::builder().api_key(api_key.into()).build()
@@ -355,8 +355,8 @@ impl Client {
 
     /// Queries AbuseIPDB given a IP address.
     ///
-    /// The check endpoint accepts a single IP address (v4 or v6). 
-    /// Optionally you may set the `max_age_in_days` parameter to only 
+    /// The check endpoint accepts a single IP address (v4 or v6).
+    /// Optionally you may set the `max_age_in_days` parameter to only
     /// return reports within the last x amount of days.
     pub async fn check(
         &self,
@@ -374,7 +374,7 @@ impl Client {
 
     /// Queries AbuseIPDB given a subnet.
     ///
-    /// The check-block endpoint accepts a subnet (v4 or v6) 
+    /// The check-block endpoint accepts a subnet (v4 or v6)
     /// denoted with CIDR notation.
     pub async fn check_block(
         &self,
@@ -390,7 +390,7 @@ impl Client {
 
     /// Queries AbuseIPDB for the blacklist.
     ///
-    /// The blacklist is the culmination of all of the valiant reporting 
+    /// The blacklist is the culmination of all of the valiant reporting
     /// by AbuseIPDB users. It's a list of the most reported IP addresses.
     pub async fn blacklist(
         &self,
@@ -422,7 +422,6 @@ impl Client {
         })
         .await
     }
-    
 
     async fn request<R>(&self, req: R) -> Result<Response<R::Response>, Error>
     where
@@ -540,7 +539,7 @@ impl ClientBuilder {
         self
     }
 
-    /// Sets the API key to be used to authenticate when 
+    /// Sets the API key to be used to authenticate when
     /// making a request AbuseIPDB.
     pub fn api_key<S>(mut self, api_key: S) -> Self
     where

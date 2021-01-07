@@ -1,5 +1,5 @@
-use std::env;
 use abuseipdb::Client;
+use std::env;
 
 #[tokio::main]
 async fn main() {
